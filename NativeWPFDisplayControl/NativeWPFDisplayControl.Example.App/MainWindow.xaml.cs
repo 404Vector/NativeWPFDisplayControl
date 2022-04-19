@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NativeWPFDisplayControl
+namespace NativeWPFDisplayControl.Example.App
 {
     /// <summary>
-    /// DisplayControl.xaml에 대한 상호 작용 논리
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class DisplayControl : DisplayControlBase
+    public partial class MainWindow : Window
     {
-        public DisplayControl()
+        public MainWindow()
         {
             InitializeComponent();
         }
