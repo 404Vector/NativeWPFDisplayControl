@@ -9,7 +9,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Canvas x:Name="PART_canvas">
+                        <Canvas x:Name="PART_canvas" Background="{TemplateBinding Background}">
                             <Image x:Name="PART_image"/>
                         </Canvas>
                     </Border>

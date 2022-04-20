@@ -10,21 +10,25 @@ namespace NativeWPFDisplayControl
     {
         #region DependencyProperty
 
-        public Matrix RenderMatrix
+
+
+        public WriteableBitmap ImageContext
         {
-            get { return (Matrix)GetValue(RenderMatrixProperty); }
-            set { SetValue(RenderMatrixProperty, value); }
+            get { return (WriteableBitmap)GetValue(ImageContextProperty); }
+            set { SetValue(ImageContextProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty RenderMatrixProperty =
-            DependencyProperty.Register("RenderMatrix", typeof(Matrix), typeof(DisplayControlBase), new PropertyMetadata(Matrix.Identity));
+        // Using a DependencyProperty as the backing store for ImageContext.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ImageContextProperty =
+            DependencyProperty.Register("ImageContext", typeof(WriteableBitmap), typeof(DisplayControlBase), new PropertyMetadata(DEFAULT_NULL_IMAGE, OnImageContextChanged));
+
 
 
         #endregion
 
         #region Field
 
+        protected static readonly WriteableBitmap DEFAULT_NULL_IMAGE = new WriteableBitmap(1, 1, 1, 1, PixelFormats.Bgr24, BitmapPalettes.Gray256);
         protected Canvas canvasControl = new Canvas();
         protected Image imageControl = new Image();
         protected Point capturedOffset;
@@ -43,6 +47,49 @@ namespace NativeWPFDisplayControl
 
         #region Method
 
+        protected static void OnImageContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d == null || d is not DisplayControlBase) { return; }
+
+            DisplayControlBase displayControlBase = (DisplayControlBase)d;
+            Image imageControl = displayControlBase.imageControl;
+            WriteableBitmap newBitmap = (WriteableBitmap)(e.NewValue);
+
+            if (newBitmap == null)
+            {
+                displayControlBase.imageControl.Source = DEFAULT_NULL_IMAGE;
+                return;
+            }
+
+            if (imageControl.Source is not WriteableBitmap)
+            {
+                imageControl.Source = newBitmap;
+                return;
+            }
+
+            WriteableBitmap currentBitmap = (WriteableBitmap)imageControl.Source;
+            if(!IsSameDemension(newBitmap, currentBitmap)) 
+            {
+                imageControl.Source = newBitmap.Clone(); 
+            }
+            else
+            {
+                var cloneArea = new Int32Rect(0, 0, newBitmap.PixelWidth, newBitmap.PixelHeight);
+                var bufferSize = newBitmap.BackBufferStride * newBitmap.PixelHeight * (newBitmap.Format.BitsPerPixel/8);
+
+                newBitmap.CopyPixels(cloneArea, currentBitmap.BackBuffer, bufferSize, currentBitmap.BackBufferStride);
+            }
+        }
+
+        protected static bool IsSameDemension(WriteableBitmap bitmapA, WriteableBitmap bitmapB)
+        {
+            if(bitmapA.Width != bitmapB.Width || bitmapA.Height != bitmapB.Height) { return false; }
+            else if(bitmapA.PixelWidth != bitmapB.PixelWidth || bitmapA.PixelHeight != bitmapB.PixelHeight) { return false; }
+            else if(bitmapA.Format != bitmapB.Format) { return false; }
+
+            return true;
+        }
+
         public override void OnApplyTemplate()
         {
             canvasControl = (Canvas)GetTemplateChild("PART_canvas");
@@ -53,7 +100,7 @@ namespace NativeWPFDisplayControl
                 canvasControl.MouseDown += OnMouseDown;
                 canvasControl.MouseUp += OnMouseUp;
                 canvasControl.MouseWheel += OnMouseWheel;
-                imageControl.Source = new BitmapImage(new System.Uri(@"C:\Users\kim.hs\Pictures\Grid.png"));
+                //imageControl.Source = new BitmapImage(new System.Uri(@"C:\Users\kim.hs\Pictures\Grid.png"));
             }
             
             base.OnApplyTemplate();

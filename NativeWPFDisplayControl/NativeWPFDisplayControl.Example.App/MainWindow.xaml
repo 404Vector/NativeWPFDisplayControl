@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <NativeWPFDisplayControl:BasicDisplayControl BorderBrush="Red" BorderThickness="2"/>
-
+        <NativeWPFDisplayControl:BasicDisplayControl x:Name="testImage" BorderBrush="Red" BorderThickness="2" ImageContext="{Binding ElementName=testImage, Path=Source}"/>
     </Grid>
 </Window>

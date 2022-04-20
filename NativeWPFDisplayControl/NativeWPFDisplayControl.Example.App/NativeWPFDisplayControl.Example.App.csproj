@@ -1,14 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Grid.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NativeWPFDisplayControl\NativeWPFDisplayControl.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Grid.png" />
   </ItemGroup>
 
 </Project>
