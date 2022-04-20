@@ -10,8 +10,6 @@ namespace NativeWPFDisplayControl
     {
         #region DependencyProperty
 
-
-
         public WriteableBitmap ImageContext
         {
             get { return (WriteableBitmap)GetValue(ImageContextProperty); }
@@ -21,8 +19,6 @@ namespace NativeWPFDisplayControl
         // Using a DependencyProperty as the backing store for ImageContext.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageContextProperty =
             DependencyProperty.Register("ImageContext", typeof(WriteableBitmap), typeof(DisplayControlBase), new PropertyMetadata(DEFAULT_NULL_IMAGE, OnImageContextChanged));
-
-
 
         #endregion
 
