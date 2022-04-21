@@ -16,7 +16,7 @@ namespace NativeWPFDisplayControl.Example.App
             InitializeComponent();
             DispatcherTimer dt = new DispatcherTimer();
             dt.Interval = TimeSpan.FromSeconds(0.1);
-            var bitmapImage = new BitmapImage(new Uri(@"C:\Users\kim.hs\Pictures\Grid.png", UriKind.Absolute));
+            var bitmapImage = new BitmapImage(new Uri(@"..\..\..\Grid.png", UriKind.Relative));
             dt.Tick += (s, e) =>
             {
                 testImage.ImageContext = new WriteableBitmap(bitmapImage);
