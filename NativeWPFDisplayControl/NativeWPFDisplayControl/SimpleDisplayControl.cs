@@ -30,10 +30,10 @@ namespace NativeWPFDisplayControl
     /// 2단계)
     /// 계속 진행하여 XAML 파일에서 컨트롤을 사용합니다.
     ///
-    ///     <MyNamespace:BasicDisplayControl/>
+    ///     <MyNamespace:SimpleDisplayControl/>
     ///
     /// </summary>
-    public sealed class BasicDisplayControl : DisplayControlBase
+    public sealed class SimpleDisplayControl : DisplayControlBase
     {
         #region DProp
 
@@ -54,9 +54,9 @@ namespace NativeWPFDisplayControl
 
         #endregion
 
-        static BasicDisplayControl()
+        static SimpleDisplayControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(BasicDisplayControl), new FrameworkPropertyMetadata(typeof(BasicDisplayControl)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SimpleDisplayControl), new FrameworkPropertyMetadata(typeof(SimpleDisplayControl)));
         }
     }
 }

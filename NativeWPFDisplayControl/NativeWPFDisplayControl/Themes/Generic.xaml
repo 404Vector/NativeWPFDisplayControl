@@ -3,6 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:NativeWPFDisplayControl">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/NativeWPFDisplayControl;component/Themes/BasicDisplayControlStyle.xaml"/>
+        <ResourceDictionary Source="/NativeWPFDisplayControl;component/Themes/SimpleDisplayControlStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
