@@ -1,6 +1,8 @@
-﻿using System;
+﻿using NativeWPFDisplayControl.Command;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -27,6 +29,11 @@ namespace NativeWPFDisplayControl
         protected static readonly WriteableBitmap DEFAULT_NULL_IMAGE = new WriteableBitmap(1, 1, 1, 1, PixelFormats.Bgr24, BitmapPalettes.Gray256);
         protected Canvas canvasControl = new Canvas();
         protected Image imageControl = new Image();
+        protected Button scaleRawBtn = new Button();
+        protected Button scaleFitBtn = new Button();
+        protected Button zoomInBtn = new Button();
+        protected Button zoomOutBtn = new Button();
+
         protected Point capturedOffset;
         protected Point capturedMousePosition;
         protected Matrix renderTransformMatrix = new Matrix();
@@ -86,22 +93,6 @@ namespace NativeWPFDisplayControl
             return true;
         }
 
-        public override void OnApplyTemplate()
-        {
-            canvasControl = (Canvas)GetTemplateChild("PART_canvas");
-            imageControl = (Image)GetTemplateChild("PART_image");
-            if (canvasControl != null && imageControl != null)
-            {
-                canvasControl.MouseMove += OnMouseMove; ;
-                canvasControl.MouseDown += OnMouseDown;
-                canvasControl.MouseUp += OnMouseUp;
-                canvasControl.MouseWheel += OnMouseWheel;
-                //imageControl.Source = new BitmapImage(new System.Uri(@"C:\Users\kim.hs\Pictures\Grid.png"));
-            }
-            
-            base.OnApplyTemplate();
-        }
-
         private void OnMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             Image image = imageControl;
@@ -149,6 +140,7 @@ namespace NativeWPFDisplayControl
         protected void ApplyRenderMatrix(ref Matrix matrix)
         {
             imageControl.RenderTransform = new MatrixTransform(matrix);
+            canvasControl.UpdateLayout();
         }
 
         protected void TranslateRenderMatrix(ref Matrix matrix, Point point)
@@ -176,6 +168,82 @@ namespace NativeWPFDisplayControl
             scaleRatio *= scaleDelta;
         }
 
+        protected void OnScaleToFitClick(object sender, RoutedEventArgs e)
+        {
+            if(imageControl.Source == null) { return; }
+
+            double viewWidth = imageControl.ActualWidth * scaleRatio;
+            double viewHeight = imageControl.ActualHeight * scaleRatio;
+            double viewRatio = viewWidth / viewHeight;
+            double canvasWidth = canvasControl.ActualWidth;
+            double canvasHeight = canvasControl.ActualHeight;
+            double canvasRatio = canvasWidth / canvasHeight;
+            bool isFitToCanvasWith = canvasRatio < viewRatio;
+            double fitScaleRatio = isFitToCanvasWith ? canvasWidth / viewWidth : canvasHeight / viewHeight;
+            Point offset = isFitToCanvasWith ? new Point(0, (canvasHeight - imageControl.ActualHeight * scaleRatio) /2.0) : new Point((canvasWidth - imageControl.ActualWidth * scaleRatio) / 2.0, 0);
+
+            ScaleRenderMatrix(ref renderTransformMatrix, fitScaleRatio);
+            ApplyRenderMatrix(ref renderTransformMatrix);
+            TranslateRenderMatrix(ref renderTransformMatrix, offset);
+            ApplyRenderMatrix(ref renderTransformMatrix);
+        }
+
+        protected void OnScaleToRawClick(object sender, RoutedEventArgs e)
+        {
+            if (imageControl.Source == null) { return; }
+
+            ScaleRenderMatrix(ref renderTransformMatrix, 1.0 / scaleRatio);
+            ApplyRenderMatrix(ref renderTransformMatrix);
+            TranslateRenderMatrix(ref renderTransformMatrix, new Point(0, 0));
+            ApplyRenderMatrix(ref renderTransformMatrix);
+        }
+
+        protected void OnZoomInClick(object sender, RoutedEventArgs e)
+        {
+            if (imageControl.Source == null) { return; }
+
+            ScaleRenderMatrix(ref renderTransformMatrix, scaleDelta);
+            ApplyRenderMatrix(ref renderTransformMatrix);
+        }
+
+        protected void OnZoomOutClick(object sender, RoutedEventArgs e)
+        {
+            if (imageControl.Source == null) { return; }
+
+            ScaleRenderMatrix(ref renderTransformMatrix, 1.0 / scaleDelta);
+            ApplyRenderMatrix(ref renderTransformMatrix);
+        }
+
+        public override void OnApplyTemplate()
+        {
+            canvasControl = (Canvas)GetTemplateChild("PART_canvas");
+            canvasControl.MouseMove += OnMouseMove; ;
+            canvasControl.MouseDown += OnMouseDown;
+            canvasControl.MouseUp += OnMouseUp;
+            canvasControl.MouseWheel += OnMouseWheel;
+
+            imageControl = (Image)GetTemplateChild("PART_image");
+
+            scaleFitBtn = (Button)GetTemplateChild("PART_scaleFitBtn");
+            scaleFitBtn.Click += OnScaleToFitClick;
+
+            scaleRawBtn = (Button)GetTemplateChild("PART_scaleRawBtn");
+            scaleRawBtn.Click += OnScaleToRawClick;
+
+            zoomInBtn = (Button)GetTemplateChild("PART_zoomInBtn");
+            zoomInBtn.Click += OnZoomInClick;
+
+            zoomOutBtn = (Button)GetTemplateChild("PART_zoomOutBtn");
+            zoomOutBtn.Click += OnZoomOutClick;
+
+            base.OnApplyTemplate();
+        }
+
+
         #endregion
+
+        protected DisplayControlBase() : base()
+        {
+        }
     }
 }

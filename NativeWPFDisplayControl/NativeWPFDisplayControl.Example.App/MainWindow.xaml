@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <NativeWPFDisplayControl:BasicDisplayControl x:Name="testImage" BorderBrush="Red" BorderThickness="2" />
+        <NativeWPFDisplayControl:BasicDisplayControl x:Name="testImage" Background="Gray" Foreground="LightGray"/>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -14,7 +15,7 @@ namespace NativeWPFDisplayControl.Example.App
         {
             InitializeComponent();
             DispatcherTimer dt = new DispatcherTimer();
-            dt.Interval = TimeSpan.FromSeconds(0.001);
+            dt.Interval = TimeSpan.FromSeconds(0.1);
             var bitmapImage = new BitmapImage(new Uri(@"C:\Users\kim.hs\Pictures\Grid.png", UriKind.Absolute));
             dt.Tick += (s, e) =>
             {
