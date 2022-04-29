@@ -18,7 +18,7 @@ namespace NativeWPFDisplayControl
     {
         #region DependencyProperty
 
-        public WriteableBitmap ImageContext
+        public WriteableBitmap ImageContext   
         {
             get { return (WriteableBitmap)GetValue(ImageContextProperty); }
             set { SetValue(ImageContextProperty, value); }
